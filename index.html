@@ -1,2 +1,512 @@
-.
-.
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Másodfokú Kifejezések – Parabola Mester (1. Sprint)</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success-bg: #dcfce7;
+            --success-text: #166534;
+            --success-border: #86efac;
+            --error-bg: #fee2e2;
+            --error-text: #991b1b;
+            --error-border: #fca5a5;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            max-width: 560px;
+            width: 100%;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+            padding: 32px;
+            border: 1px solid var(--border);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+
+        header p {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        .badge {
+            display: inline-block;
+            background: #eff6ff;
+            color: var(--primary);
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 999px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .expression-box {
+            background-color: #f1f5f9;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 24px 16px;
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .expression-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            font-weight: 600;
+        }
+
+        .expression-text {
+            font-size: 2.1rem;
+            font-weight: 700;
+            color: #0f172a;
+            letter-spacing: 0.02em;
+        }
+
+        .question-group {
+            margin-bottom: 24px;
+        }
+
+        .question-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .step-num {
+            background-color: var(--primary);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .options-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .options-grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+        }
+
+        .option-btn {
+            background-color: white;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 14px 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: #93c5fd;
+            background-color: #f8fafc;
+        }
+
+        .option-btn.selected {
+            border-color: var(--primary);
+            background-color: #eff6ff;
+            color: var(--primary);
+            box-shadow: 0 0 0 1px var(--primary);
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+            opacity: 0.85;
+        }
+
+        .parabola-icon {
+            font-size: 1.4rem;
+            line-height: 1;
+        }
+
+        .action-btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+            margin-top: 8px;
+        }
+
+        .btn-check {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-check:hover:not(:disabled) {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-check:disabled {
+            background-color: #cbd5e1;
+            cursor: not-allowed;
+        }
+
+        .btn-next {
+            background-color: #0f172a;
+            color: white;
+            display: none;
+        }
+
+        .btn-next:hover {
+            background-color: #334155;
+        }
+
+        .feedback-box {
+            margin-top: 24px;
+            padding: 18px;
+            border-radius: 12px;
+            display: none;
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+
+        .feedback-box.correct {
+            background-color: var(--success-bg);
+            color: var(--success-text);
+            border: 1px solid var(--success-border);
+            display: block;
+        }
+
+        .feedback-box.incorrect {
+            background-color: var(--error-bg);
+            color: var(--error-text);
+            border: 1px solid var(--error-border);
+            display: block;
+        }
+
+        .feedback-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .math-detail {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            font-size: 0.92rem;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+            .expression-text {
+                font-size: 1.75rem;
+            }
+            .options-grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <span class="badge">1. Sprint – Alapmotor</span>
+        <h1>Másodfokú Kifejezés Elemző</h1>
+        <p>Döntsd el a képlet alapján, merre nyílik a parabola, és hány közös pontja van az x-tengellyel!</p>
+    </header>
+
+    <div class="expression-box">
+        <div class="expression-label">Vizsgált másodfokú kifejezés</div>
+        <div class="expression-text" id="expression-display">2x² - 4x - 6</div>
+    </div>
+
+    <div class="question-group">
+        <div class="question-title">
+            <span class="step-num">1</span> Hogyan áll a parabola?
+        </div>
+        <div class="options-grid-2" id="dir-options">
+            <button type="button" class="option-btn" data-value="up" onclick="selectDirection('up')">
+                <span class="parabola-icon">∪</span>
+                <span>Felfelé nyílik</span>
+            </button>
+            <button type="button" class="option-btn" data-value="down" onclick="selectDirection('down')">
+                <span class="parabola-icon">∩</span>
+                <span>Lefelé nyílik</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="question-group">
+        <div class="question-title">
+            <span class="step-num">2</span> Hány közös pontja van az x-tengellyel?
+        </div>
+        <div class="options-grid-3" id="roots-options">
+            <button type="button" class="option-btn" data-value="0" onclick="selectRoots(0)">
+                <span>0 db</span>
+                <small style="font-weight: 400; font-size: 0.8rem;">(nincs metszés)</small>
+            </button>
+            <button type="button" class="option-btn" data-value="1" onclick="selectRoots(1)">
+                <span>1 db</span>
+                <small style="font-weight: 400; font-size: 0.8rem;">(érinti)</small>
+            </button>
+            <button type="button" class="option-btn" data-value="2" onclick="selectRoots(2)">
+                <span>2 db</span>
+                <small style="font-weight: 400; font-size: 0.8rem;">(metszi)</small>
+            </button>
+        </div>
+    </div>
+
+    <button type="button" class="action-btn btn-check" id="check-btn" onclick="checkAnswer()" disabled>
+        Ellenőrzés
+    </button>
+
+    <div class="feedback-box" id="feedback-box">
+        <div class="feedback-title" id="feedback-title"></div>
+        <div id="feedback-summary"></div>
+        <div class="math-detail" id="feedback-math"></div>
+    </div>
+
+    <button type="button" class="action-btn btn-next" id="next-btn" onclick="nextQuestion()">
+        Következő feladat →
+    </button>
+</div>
+
+<script>
+    let currentProblem = null;
+    let selectedDir = null;
+    let selectedRoots = null;
+
+    function randInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function generateProblem() {
+        // Kiegyensúlyozott generálás: 0, 1 vagy 2 zérushelyes eset
+        const targetRoots = [0, 1, 2][randInt(0, 2)];
+        const nonZeroA = [-3, -2, -1, 1, 2, 3];
+        const a = nonZeroA[randInt(0, nonZeroA.length - 1)];
+        let b = 0;
+        let c = 0;
+
+        if (targetRoots === 2) {
+            // Két különböző valós gyökből építjük fel, hogy szép egész együtthatókat kapjunk
+            let x1 = randInt(-5, 5);
+            let x2 = randInt(-5, 5);
+            while (x1 === x2) {
+                x2 = randInt(-5, 5);
+            }
+            // a(x - x1)(x - x2) = a*x^2 - a*(x1 + x2)*x + a*x1*x2
+            b = -a * (x1 + x2);
+            c = a * x1 * x2;
+        } else if (targetRoots === 1) {
+            // Egy valós gyök (teljes négyzet): a(x - x1)^2 = a*x^2 - 2*a*x1*x + a*x1^2
+            let x1 = randInt(-5, 5);
+            b = -2 * a * x1;
+            c = a * x1 * x1;
+        } else {
+            // Nincs valós gyök: a*(x - h)^2 + k, ahol a és k azonos előjelű (k != 0)
+            let h = randInt(-4, 4);
+            let kMagnitude = randInt(1, 6);
+            let k = a > 0 ? kMagnitude : -kMagnitude;
+            // a(x^2 - 2hx + h^2) + k = a*x^2 - 2ah*x + (a*h^2 + k)
+            b = -2 * a * h;
+            c = a * h * h + k;
+        }
+
+        const discriminant = b * b - 4 * a * c;
+        const direction = a > 0 ? 'up' : 'down';
+
+        return {
+            a: a,
+            b: b,
+            c: c,
+            discriminant: discriminant,
+            direction: direction,
+            rootsCount: targetRoots,
+            formatted: formatQuadratic(a, b, c)
+        };
+    }
+
+    function formatQuadratic(a, b, c) {
+        let parts = [];
+
+        // ax^2 tag
+        if (a === 1) parts.push("x²");
+        else if (a === -1) parts.push("-x²");
+        else parts.push(`${a}x²`);
+
+        // bx tag
+        if (b !== 0) {
+            if (b === 1) parts.push("+ x");
+            else if (b === -1) parts.push("- x");
+            else if (b > 0) parts.push(`+ ${b}x`);
+            else parts.push(`- ${Math.abs(b)}x`);
+        }
+
+        // c tag
+        if (c !== 0) {
+            if (c > 0) parts.push(`+ ${c}`);
+            else parts.push(`- ${Math.abs(c)}`);
+        }
+
+        return parts.join(" ");
+    }
+
+    function selectDirection(dir) {
+        if (document.getElementById('check-btn').style.display === 'none') return;
+        selectedDir = dir;
+        document.querySelectorAll('#dir-options .option-btn').forEach(btn => {
+            btn.classList.toggle('selected', btn.dataset.value === dir);
+        });
+        updateCheckButton();
+    }
+
+    function selectRoots(count) {
+        if (document.getElementById('check-btn').style.display === 'none') return;
+        selectedRoots = count;
+        document.querySelectorAll('#roots-options .option-btn').forEach(btn => {
+            btn.classList.toggle('selected', parseInt(btn.dataset.value, 10) === count);
+        });
+        updateCheckButton();
+    }
+
+    function updateCheckButton() {
+        const btn = document.getElementById('check-btn');
+        btn.disabled = !(selectedDir !== null && selectedRoots !== null);
+    }
+
+    function checkAnswer() {
+        const isDirCorrect = selectedDir === currentProblem.direction;
+        const isRootsCorrect = selectedRoots === currentProblem.rootsCount;
+        const allCorrect = isDirCorrect && isRootsCorrect;
+
+        // Gombok letiltása kiértékelés után
+        document.querySelectorAll('.option-btn').forEach(btn => btn.disabled = true);
+        document.getElementById('check-btn').style.display = 'none';
+        document.getElementById('next-btn').style.display = 'block';
+
+        const feedbackBox = document.getElementById('feedback-box');
+        const feedbackTitle = document.getElementById('feedback-title');
+        const feedbackSummary = document.getElementById('feedback-summary');
+        const feedbackMath = document.getElementById('feedback-math');
+
+        feedbackBox.className = 'feedback-box ' + (allCorrect ? 'correct' : 'incorrect');
+
+        if (allCorrect) {
+            feedbackTitle.textContent = "Tökéletes megoldás! 🎉";
+            feedbackSummary.textContent = "Mind a parabola nyílásának irányát, mind a zérushelyek számát helyesen állapítottad meg.";
+        } else {
+            feedbackTitle.textContent = "Majdnem! Nézzük meg pontosan:";
+            let errors = [];
+            if (!isDirCorrect) {
+                errors.push(`a parabola <strong>${currentProblem.direction === 'up' ? 'felfelé' : 'lefelé'} nyílik</strong>`);
+            }
+            if (!isRootsCorrect) {
+                errors.push(`az x-tengellyel <strong>${currentProblem.rootsCount} közös pontja</strong> van`);
+            }
+            feedbackSummary.innerHTML = "A helyes válasz szerint " + errors.join(", és ") + ".";
+        }
+
+        const dirReason = currentProblem.a > 0
+            ? `Mivel <strong>a = ${currentProblem.a} &gt; 0</strong>, a parabola <strong>felfelé</strong> nyílik (∪).`
+            : `Mivel <strong>a = ${currentProblem.a} &lt; 0</strong>, a parabola <strong>lefelé</strong> nyílik (∩).`;
+
+        let dComparison = "";
+        if (currentProblem.discriminant > 0) dComparison = "&gt; 0, ezért <strong>2 közös pontja</strong> van az x-tengellyel.";
+        else if (currentProblem.discriminant === 0) dComparison = "= 0, ezért pontosan <strong>1 közös pontja</strong> van (érinti az x-tengelyt).";
+        else dComparison = "&lt; 0, ezért <strong>0 közös pontja</strong> van (nem metszi az x-tengelyt).";
+
+        const bFormatted = currentProblem.b < 0 ? `(${currentProblem.b})` : `${currentProblem.b}`;
+        const aFormatted = currentProblem.a < 0 ? `(${currentProblem.a})` : `${currentProblem.a}`;
+        const cFormatted = currentProblem.c < 0 ? `(${currentProblem.c})` : `${currentProblem.c}`;
+
+        const rootsReason = `A diszkrimináns: <strong>D = b² - 4ac</strong> = ${bFormatted}² - 4 · ${aFormatted} · ${cFormatted} = <strong>${currentProblem.discriminant}</strong> ${dComparison}`;
+
+        feedbackMath.innerHTML = `${dirReason}<br>${rootsReason}`;
+    }
+
+    function nextQuestion() {
+        currentProblem = generateProblem();
+        selectedDir = null;
+        selectedRoots = null;
+
+        document.getElementById('expression-display').textContent = currentProblem.formatted;
+
+        document.querySelectorAll('.option-btn').forEach(btn => {
+            btn.classList.remove('selected');
+            btn.disabled = false;
+        });
+
+        const checkBtn = document.getElementById('check-btn');
+        checkBtn.style.display = 'block';
+        checkBtn.disabled = true;
+
+        document.getElementById('next-btn').style.display = 'none';
+        document.getElementById('feedback-box').className = 'feedback-box';
+    }
+
+    // Első feladat betöltése induláskor
+    nextQuestion();
+</script>
+
+</body>
+</html>
